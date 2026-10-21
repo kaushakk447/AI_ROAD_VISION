@@ -1,0 +1,58 @@
+services:
+  api:
+    build:
+      context: ./backend
+    init: true
+    restart: unless-stopped
+    environment:
+      PORT: "8000"
+      ROADVISION_DATA_DIR: /app/data
+      ROADVISION_MODEL_DIR: /app/data/models
+      ROADVISION_MODEL_PATH: ${ROADVISION_MODEL_PATH:-yolov8n.pt}
+      ROADVISION_DEVICE: cpu
+      ROADVISION_IMAGE_SIZE: ${ROADVISION_IMAGE_SIZE:-640}
+      ROADVISION_VIDEO_IMAGE_SIZE: ${ROADVISION_VIDEO_IMAGE_SIZE:-640}
+      ROADVISION_MAX_UPLOAD_MB: ${ROADVISION_MAX_UPLOAD_MB:-50}
+      ROADVISION_VIDEO_WORKERS: "1"
+      ROADVISION_RETENTION_DAYS: ${ROADVISION_RETENTION_DAYS:-30}
+      ROADVISION_AUTH_REQUIRED: "true"
+      ROADVISION_AUTH_USERNAME: ${ROADVISION_AUTH_USERNAME:?Set ROADVISION_AUTH_USERNAME in .env}
+      ROADVISION_AUTH_PASSWORD: ${ROADVISION_AUTH_PASSWORD:?Set ROADVISION_AUTH_PASSWORD in .env}
+      ROADVISION_AUTH_SECRET: ${ROADVISION_AUTH_SECRET:?Set ROADVISION_AUTH_SECRET in .env}
+      ROADVISION_CORS_ORIGINS: ${FRONTEND_ORIGIN:?Set FRONTEND_ORIGIN in .env}
+    expose:
+      - "8000"
+    volumes:
+      - roadvision_data:/app/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=5)
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      API_DOMAIN: ${API_DOMAIN:?Set API_DOMAIN in .env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/oracle/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  roadvision_data:
+  caddy_data:
+  caddy_config:

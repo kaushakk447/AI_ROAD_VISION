@@ -22,7 +22,7 @@ AI Road Vision is a local-first computer-vision workspace for road imagery and v
 
 ## Deployment
 
-See [docs/deployment.md](docs/deployment.md) for the Vercel frontend and Railway backend setup, including public-login environment variables and persistent storage.
+See [docs/deployment.md](docs/deployment.md) for deploying the frontend to Cloudflare Pages and the authenticated API to an Oracle Cloud Always Free VM. Always Free capacity and eligibility are subject to Oracle's current terms; the VM requires ongoing maintenance.
 
 ## Requirements
 
@@ -110,7 +110,7 @@ The automated backend tests cover SQLite job aggregation, track summaries, uploa
 - Track IDs and trajectories are video-frame observations in pixel coordinates. They do not establish physical speed or distance.
 - Video processing is CPU/GPU dependent. Sampling fewer frames reduces work but can miss short-lived objects.
 - Real-ESRGAN is only reported as available when compatible software and local weights exist; this project does not claim enhanced detection accuracy.
-- There is no authentication. Run the service on a trusted local network and do not expose it publicly without adding access controls and deployment hardening.
+- Authentication is optional for local development and can be enabled for public hosting with `ROADVISION_AUTH_REQUIRED` and the credentials described in [docs/deployment.md](docs/deployment.md). The hosted setup uses one shared login, not individual accounts.
 - Ultralytics model and software licensing depends on use and distribution; review the applicable AGPL-3.0 or Enterprise terms before commercial or proprietary deployment.
 
 ## GitHub

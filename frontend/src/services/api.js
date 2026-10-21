@@ -1,6 +1,10 @@
 import axios from 'axios'
 
-const baseURL = import.meta.env.VITE_API_URL || '/api'
+const configuredApiUrl = import.meta.env.VITE_API_URL
+const trimmedApiUrl = configuredApiUrl?.replace(/\/+$/, '')
+const baseURL = trimmedApiUrl
+  ? (trimmedApiUrl === '/api' || trimmedApiUrl.endsWith('/api') ? trimmedApiUrl : `${trimmedApiUrl}/api`)
+  : '/api'
 export const AUTH_TOKEN_KEY = 'roadvision_access_token'
 
 export const api = axios.create({ baseURL, timeout: 120000 })

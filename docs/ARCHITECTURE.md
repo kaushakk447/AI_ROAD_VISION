@@ -22,4 +22,4 @@ SQLite uses foreign keys and WAL mode. Deleting a job removes its detection rows
 
 ## Security boundaries
 
-Uploads are checked by extension, declared MIME type when provided, byte signature, configured size, and OpenCV decoding. Files receive server-generated names. Download paths are resolved inside the configured results directory. SQL values are parameterized, settings are validated with Pydantic, and CORS defaults to the local Vite origins. The app does not include user authentication or public deployment controls.
+Uploads are checked by extension, declared MIME type when provided, byte signature, configured size, and OpenCV decoding. Files receive server-generated names. Download paths are resolved inside the configured results directory. SQL values are parameterized and settings are validated with Pydantic. CORS defaults to local Vite origins. Optional bearer-token authentication can be enabled with `ROADVISION_AUTH_REQUIRED`; the Render deployment enables it and uses a shared login rather than individual accounts.
