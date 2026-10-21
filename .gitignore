@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+backend/.test-packages/
+
+# Model weights and generated media
+backend/models/*.pt
+backend/models/*.onnx
+backend/models/*.engine
+backend/data/
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Local configuration and editor files
+.env
+backend/.env
+*.log
+.DS_Store
+Thumbs.db
